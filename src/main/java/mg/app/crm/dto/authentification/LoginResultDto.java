@@ -20,6 +20,6 @@ public class LoginResultDto
     private String lastName;
     private String companyName;
     private String avatar;
-    private List<MenuNavigationTreeNodeDto> menuNavigation;
+    // private List<MenuNavigationTreeNodeDto> menuNavigation;
     private List<String> roles;
 }

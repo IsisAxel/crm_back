@@ -1,10 +1,11 @@
 package mg.app.crm.service;
 
 
+import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiErrorResult;
 import mg.app.crm.dto.api.ApiSuccessResult;
@@ -12,7 +13,7 @@ import mg.app.crm.exception.ApiErrorException;
 
 public class ApiService 
 {
-    public static <T> ApiSuccessResult<T> parseResponse(String jsonResponse, Class<T> contentClass) throws ApiErrorException {
+    public static <T> ApiSuccessResult<T> parseResponse(String jsonResponse, Type type) throws ApiErrorException {
         Gson gson = new Gson();
         JsonElement rootNode = JsonParser.parseString(jsonResponse);
     
@@ -20,10 +21,7 @@ public class ApiService
             int code = rootNode.getAsJsonObject().get("code").getAsInt();
     
             if (code == 200) {
-                ApiSuccessResult<T> successResult = gson.fromJson(rootNode, 
-                    TypeToken.getParameterized(ApiSuccessResult.class, contentClass).getType());
-    
-                return successResult;
+                return gson.fromJson(rootNode, type);
             } else {
                 ApiErrorResult errorResult = gson.fromJson(rootNode, ApiErrorResult.class);
                 throw new ApiErrorException(errorResult);
@@ -32,4 +30,5 @@ public class ApiService
             throw new RuntimeException("Internal error!");
         }
     }
+    
 }

@@ -1,9 +1,13 @@
 package mg.app.crm.service;
 
+import java.lang.reflect.Type;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+
+import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.authentification.LoginRequest;
@@ -28,8 +32,9 @@ public class AuthentificationServiceImplementation implements AuthentificationSe
                 .body(request)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<String>() {});
-
-        ApiSuccessResult<LoginResult> successResult = ApiService.parseResponse(response.getBody(), LoginResult.class);
+        
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, LoginResult.class).getType();
+        ApiSuccessResult<LoginResult> successResult = ApiService.parseResponse(response.getBody(), type);
         return successResult;
     }
 
@@ -37,12 +42,14 @@ public class AuthentificationServiceImplementation implements AuthentificationSe
     public ApiSuccessResult<LogoutResult> logout(LogoutRequest request) throws Exception {
         ResponseEntity<String> response = restClient.post()
                 .uri("/Security/Logout")
-                .header("Content-Type", "application/json" , "Authorization", "Bearer " + request.getToken())
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + request.getToken())
                 .body(request)
                 .retrieve()
                 .toEntity(new ParameterizedTypeReference<String>() {});
-
-        ApiSuccessResult<LogoutResult> successResult = ApiService.parseResponse(response.getBody(), LogoutResult.class);
+                
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, LogoutResult.class).getType();
+        ApiSuccessResult<LogoutResult> successResult = ApiService.parseResponse(response.getBody(), type);
         return successResult;
     }
 }

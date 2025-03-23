@@ -24,7 +24,7 @@ public class AuthentificationController
     private AuthentificationService authentificationService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResult> postMethodName(@RequestBody LoginRequest request) throws Exception 
+    public ResponseEntity<LoginResult> login(@RequestBody LoginRequest request) throws Exception 
     {
         ApiSuccessResult<LoginResult> result = authentificationService.login(request);
         LoginResult loginResult = result.getContent();
