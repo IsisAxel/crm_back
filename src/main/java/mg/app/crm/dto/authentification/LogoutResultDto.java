@@ -5,12 +5,11 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import mg.app.crm.dto.api.MenuNavigationTreeNodeDto;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResultDto 
+public class LogoutResultDto 
 {
     private String accessToken;
     private String refreshToken;
@@ -19,7 +18,5 @@ public class LoginResultDto
     private String firstName;
     private String lastName;
     private String companyName;
-    private String avatar;
-    private List<MenuNavigationTreeNodeDto> menuNavigation;
-    private List<String> roles;
+    private List<String> userClaims;
 }
