@@ -3,14 +3,13 @@ package mg.app.crm.service;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
-import mg.app.crm.dto.api.ApiErrorResult;
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.authentification.LoginRequest;
 import mg.app.crm.dto.authentification.LoginResult;
-import mg.app.crm.exception.ApiErrorException;
+import mg.app.crm.dto.authentification.LogoutRequest;
+import mg.app.crm.dto.authentification.LogoutResult;
 
 @Service
 public class AuthentificationServiceImplementation implements AuthentificationService
@@ -22,26 +21,28 @@ public class AuthentificationServiceImplementation implements AuthentificationSe
     }
 
     @Override
-    public LoginResult login(LoginRequest request) throws Exception {
-        try {
-            ResponseEntity<ApiSuccessResult<LoginResult>> successResponse = restClient.post()
-                    .uri("/Security/Login")
-                    .header("Content-Type", "application/json")
-                    .body(request)
-                    .retrieve()
-                    .toEntity(new ParameterizedTypeReference<ApiSuccessResult<LoginResult>>() {});
+    public ApiSuccessResult<LoginResult> login(LoginRequest request) throws Exception {
+        ResponseEntity<String> response = restClient.post()
+                .uri("/Security/Login")
+                .header("Content-Type", "application/json")
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
 
-            if (successResponse.getStatusCode().is2xxSuccessful() && successResponse.getBody() != null) {
-                return successResponse.getBody().getContent();
-            }
-        } catch (HttpClientErrorException e) {
-            // Si une erreur HTTP est renvoyée, désérialiser la réponse en ApiErrorResult
-            if (e.getStatusCode().is4xxClientError() || e.getStatusCode().is5xxServerError()) {
-                ApiErrorResult errorResult = e.getResponseBodyAs(ApiErrorResult.class);
-                throw new ApiErrorException(errorResult);
-            }
-        }
+        ApiSuccessResult<LoginResult> successResult = ApiService.parseResponse(response.getBody(), LoginResult.class);
+        return successResult;
+    }
 
-        throw new RuntimeException("Internal error!");
+    @Override
+    public ApiSuccessResult<LogoutResult> logout(LogoutRequest request) throws Exception {
+        ResponseEntity<String> response = restClient.post()
+                .uri("/Security/Logout")
+                .header("Content-Type", "application/json" , "Authorization", "Bearer " + request.getToken())
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+
+        ApiSuccessResult<LogoutResult> successResult = ApiService.parseResponse(response.getBody(), LogoutResult.class);
+        return successResult;
     }
 }
