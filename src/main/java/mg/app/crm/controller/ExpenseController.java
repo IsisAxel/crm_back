@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
-import mg.app.crm.dto.campaign.CampaignResultDto;
-import mg.app.crm.service.CampaignService;
+import mg.app.crm.dto.expense.ExpenseResultDto;
+import mg.app.crm.service.ExpenseService;
 
 @RestController
-@RequestMapping("/campaign")
-public class CampaignController 
+@RequestMapping("/expense")
+public class ExpenseController 
 {
     @Autowired
-    private CampaignService campaignService;  
-    
+    private ExpenseService expenseService;
+
     @GetMapping("/all")
-    public ResponseEntity<CampaignResultDto> getCampaigns(@RequestHeader("Authorization") String token) throws Exception
+    public ResponseEntity<ExpenseResultDto> getExpenses(@RequestHeader("Authorization") String token) throws Exception
     {
         token = token.replace("Bearer ", "");
-        ApiSuccessResult<CampaignResultDto> result = campaignService.getCampaigns(token);
+        ApiSuccessResult<ExpenseResultDto> result = expenseService.getExpenses(token);
         return ResponseEntity.ok(result.getContent());
     }
 }

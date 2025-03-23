@@ -8,21 +8,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
-import mg.app.crm.dto.campaign.CampaignResultDto;
-import mg.app.crm.service.CampaignService;
+import mg.app.crm.dto.budget.BudgetResultDto;
+import mg.app.crm.service.BudgetService;
 
 @RestController
-@RequestMapping("/campaign")
-public class CampaignController 
+@RequestMapping("/budget")
+public class BudgetController 
 {
     @Autowired
-    private CampaignService campaignService;  
+    private BudgetService budgetService;  
     
     @GetMapping("/all")
-    public ResponseEntity<CampaignResultDto> getCampaigns(@RequestHeader("Authorization") String token) throws Exception
+    public ResponseEntity<BudgetResultDto> getBudgets(@RequestHeader("Authorization") String token) throws Exception
     {
         token = token.replace("Bearer ", "");
-        ApiSuccessResult<CampaignResultDto> result = campaignService.getCampaigns(token);
+        ApiSuccessResult<BudgetResultDto> result = budgetService.getBudgets(token);
         return ResponseEntity.ok(result.getContent());
     }
 }
