@@ -12,6 +12,14 @@ import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.budget.BudgetResultDto;
+import mg.app.crm.dto.budget.DeleteBudgetRequest;
+import mg.app.crm.dto.budget.DeleteBudgetResult;
+import mg.app.crm.dto.budget.UpdateBudgetRequest;
+import mg.app.crm.dto.budget.UpdateBudgetResult;
+import mg.app.crm.dto.campaign.DeleteCampaignRequest;
+import mg.app.crm.dto.campaign.DeleteCampaignResult;
+import mg.app.crm.dto.campaign.UpdateCampaignRequest;
+import mg.app.crm.dto.campaign.UpdateCampaignResult;
 
 @Service
 public class BudgetServiceImplementation implements BudgetService
@@ -39,6 +47,46 @@ public class BudgetServiceImplementation implements BudgetService
         }catch(HttpClientErrorException ep) {
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<BudgetResultDto> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+        @Override
+    public ApiSuccessResult<UpdateBudgetResult> update(UpdateBudgetRequest request, String token) throws Exception {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, UpdateBudgetResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.post()
+                .uri("/Budget/UpdateBudget")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<UpdateBudgetResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<UpdateBudgetResult> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<DeleteBudgetResult> delete(DeleteBudgetRequest request, String token) throws Exception {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, DeleteBudgetResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.post()
+                .uri("/Budget/DeleteBudget")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<DeleteBudgetResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<DeleteBudgetResult> result = ApiService.parseResponse(message, type);
             return result;
         }
     }
