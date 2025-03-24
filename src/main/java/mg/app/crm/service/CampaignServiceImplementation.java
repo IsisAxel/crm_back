@@ -12,6 +12,10 @@ import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.campaign.CampaignResultDto;
+import mg.app.crm.dto.campaign.DeleteCampaignRequest;
+import mg.app.crm.dto.campaign.DeleteCampaignResult;
+import mg.app.crm.dto.campaign.UpdateCampaignRequest;
+import mg.app.crm.dto.campaign.UpdateCampaignResult;
 
 @Service
 public class CampaignServiceImplementation implements CampaignService 
@@ -38,6 +42,46 @@ public class CampaignServiceImplementation implements CampaignService
         }catch(HttpClientErrorException ep) {
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<CampaignResultDto> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<UpdateCampaignResult> update(UpdateCampaignRequest request, String token) throws Exception {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, UpdateCampaignResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.post()
+                .uri("/Campaign/UpdateCampaign")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<UpdateCampaignResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<UpdateCampaignResult> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<DeleteCampaignResult> delete(DeleteCampaignRequest request, String token) throws Exception {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, DeleteCampaignResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.post()
+                .uri("/Campaign/DeleteCampaign")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(request)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<DeleteCampaignResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<DeleteCampaignResult> result = ApiService.parseResponse(message, type);
             return result;
         }
     }

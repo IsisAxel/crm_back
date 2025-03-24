@@ -3,18 +3,18 @@ package mg.app.crm.dto.campaign;
 import lombok.Getter;
 
 public enum CampaignStatus {
-    DRAFT("Draft"),
-    CANCELLED("Cancelled"),
-    CONFIRMED("Confirmed"),
-    ON_PROGRESS("OnProgress"),
-    ON_HOLD("OnHold"),
-    FINISHED("Finished"),
-    ARCHIVED("Archived");
+    DRAFT(0),
+    CANCELLED(1),
+    CONFIRMED(2),
+    ON_PROGRESS(3),
+    ON_HOLD(4),
+    FINISHED(5),
+    ARCHIVED(6);
 
     @Getter
-    private final String description;
+    private final int value;
 
-    CampaignStatus(String description) {
-        this.description = description;
+    CampaignStatus(int value) {
+        this.value = value;
     }
 }
