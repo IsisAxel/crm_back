@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.campaign.CampaignResultDto;
+import mg.app.crm.dto.campaign.CampaignRevenueSummaryDto;
+import mg.app.crm.dto.campaign.CampaignRevenueSummaryResult;
 import mg.app.crm.dto.campaign.DeleteCampaignRequest;
 import mg.app.crm.dto.campaign.DeleteCampaignResult;
 import mg.app.crm.dto.campaign.UpdateCampaignRequest;
@@ -48,4 +50,12 @@ public class CampaignController
         ApiSuccessResult<DeleteCampaignResult> result = campaignService.delete(request,token);
         return ResponseEntity.ok(result.getContent());
     }  
+
+    @GetMapping("/revenueSummary")
+    public ResponseEntity<CampaignRevenueSummaryResult> getCampaignsRevenueSummary(@RequestHeader("Authorization") String token) throws Exception
+    {
+        token = token.replace("Bearer ", "");
+        ApiSuccessResult<CampaignRevenueSummaryResult> result = campaignService.getCampaignRevenueSummary(token);
+        return ResponseEntity.ok(result.getContent());
+    }
 }

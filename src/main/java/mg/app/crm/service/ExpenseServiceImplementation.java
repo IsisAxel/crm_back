@@ -19,6 +19,8 @@ import mg.app.crm.dto.expense.BudgetAlertRateRequest;
 import mg.app.crm.dto.expense.BudgetAlertRateResult;
 import mg.app.crm.dto.expense.DeleteExpenseRequest;
 import mg.app.crm.dto.expense.DeleteExpenseResult;
+import mg.app.crm.dto.expense.ExpenseAmountByCampaignDto;
+import mg.app.crm.dto.expense.ExpenseAmountByCampaignResult;
 import mg.app.crm.dto.expense.ExpenseResultDto;
 import mg.app.crm.dto.expense.UpdateExpenseRequest;
 import mg.app.crm.dto.expense.UpdateExpenseResult;
@@ -111,6 +113,27 @@ public class ExpenseServiceImplementation implements ExpenseService
         }catch(HttpClientErrorException ep) {
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<DeleteExpenseResult> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<ExpenseAmountByCampaignResult> getExpensesAmountByCampaign(String token) throws Exception 
+    {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, ExpenseAmountByCampaignResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.get()
+                .uri("/Expense/GetExpenseAmountListByCampaign")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            
+            ApiSuccessResult<ExpenseAmountByCampaignResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<ExpenseAmountByCampaignResult> result = ApiService.parseResponse(message, type);
             return result;
         }
     }

@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClient;
 import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
+import mg.app.crm.dto.budget.BudgetByCampaignResult;
 import mg.app.crm.dto.budget.BudgetResultDto;
 import mg.app.crm.dto.budget.DeleteBudgetRequest;
 import mg.app.crm.dto.budget.DeleteBudgetResult;
@@ -87,6 +88,27 @@ public class BudgetServiceImplementation implements BudgetService
         }catch(HttpClientErrorException ep) {
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<DeleteBudgetResult> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<BudgetByCampaignResult> getBudgetByCampaign(String token) throws Exception 
+    {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, BudgetByCampaignResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.get()
+                .uri("/Budget/GetBudgetByCampaign")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            
+            ApiSuccessResult<BudgetByCampaignResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<BudgetByCampaignResult> result = ApiService.parseResponse(message, type);
             return result;
         }
     }
