@@ -17,6 +17,7 @@ import mg.app.crm.dto.expense.BudgetAlertRateRequest;
 import mg.app.crm.dto.expense.BudgetAlertRateResult;
 import mg.app.crm.dto.expense.DeleteExpenseRequest;
 import mg.app.crm.dto.expense.DeleteExpenseResult;
+import mg.app.crm.dto.expense.ExpenseAmountByCampaignResult;
 import mg.app.crm.dto.expense.ExpenseResultDto;
 import mg.app.crm.dto.expense.UpdateExpenseRequest;
 import mg.app.crm.dto.expense.UpdateExpenseResult;
@@ -37,6 +38,14 @@ public class ExpenseController
     {
         token = token.replace("Bearer ", "");
         ApiSuccessResult<ExpenseResultDto> result = expenseService.getExpenses(token);
+        return ResponseEntity.ok(result.getContent());
+    }
+
+    @GetMapping("/expenseAmountByCampaign")
+    public ResponseEntity<ExpenseAmountByCampaignResult> getExpensesAmountByCampaign(@RequestHeader("Authorization") String token) throws Exception
+    {
+        token = token.replace("Bearer ", "");
+        ApiSuccessResult<ExpenseAmountByCampaignResult> result = expenseService.getExpensesAmountByCampaign(token);
         return ResponseEntity.ok(result.getContent());
     }
 

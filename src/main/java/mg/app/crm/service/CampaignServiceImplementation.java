@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.campaign.CampaignResultDto;
+import mg.app.crm.dto.campaign.CampaignRevenueSummaryResult;
 import mg.app.crm.dto.campaign.DeleteCampaignRequest;
 import mg.app.crm.dto.campaign.DeleteCampaignResult;
 import mg.app.crm.dto.campaign.UpdateCampaignRequest;
@@ -82,6 +83,25 @@ public class CampaignServiceImplementation implements CampaignService
         }catch(HttpClientErrorException ep) {
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<DeleteCampaignResult> result = ApiService.parseResponse(message, type);
+            return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<CampaignRevenueSummaryResult> getCampaignRevenueSummary(String token) throws Exception {
+        Type type = TypeToken.getParameterized(ApiSuccessResult.class, CampaignRevenueSummaryResult.class).getType();
+        try {
+            ResponseEntity<String> response = restClient.get()
+                .uri("/Campaign/GetCampaignRevenueSummary")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<CampaignRevenueSummaryResult> result = ApiService.parseResponse(response.getBody(), type);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            ApiSuccessResult<CampaignRevenueSummaryResult> result = ApiService.parseResponse(message, type);
             return result;
         }
     }

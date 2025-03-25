@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
+import mg.app.crm.dto.budget.BudgetByCampaignResult;
 import mg.app.crm.dto.budget.BudgetResultDto;
 import mg.app.crm.dto.budget.DeleteBudgetRequest;
 import mg.app.crm.dto.budget.DeleteBudgetResult;
@@ -29,6 +30,14 @@ public class BudgetController
     {
         token = token.replace("Bearer ", "");
         ApiSuccessResult<BudgetResultDto> result = budgetService.getBudgets(token);
+        return ResponseEntity.ok(result.getContent());
+    }
+
+    @GetMapping("/budgetByCampaign")
+    public ResponseEntity<BudgetByCampaignResult> getBudgetByCampaign(@RequestHeader("Authorization") String token) throws Exception
+    {
+        token = token.replace("Bearer ", "");
+        ApiSuccessResult<BudgetByCampaignResult> result = budgetService.getBudgetByCampaign(token);
         return ResponseEntity.ok(result.getContent());
     }
 
