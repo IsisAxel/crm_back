@@ -15,4 +15,5 @@ public interface CampaignService
     public ApiSuccessResult<UpdateCampaignResult> update(UpdateCampaignRequest request, String token) throws Exception;
     public ApiSuccessResult<DeleteCampaignResult> delete(DeleteCampaignRequest request, String token) throws Exception;
     public ApiSuccessResult<CampaignRevenueSummaryResult> getCampaignRevenueSummary(String token) throws Exception;
+    public ApiSuccessResult<String> sendFileName(String token , String fileName) throws Exception;
 }
