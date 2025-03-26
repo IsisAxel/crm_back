@@ -11,6 +11,7 @@ import org.springframework.web.client.RestClient;
 import com.google.gson.reflect.TypeToken;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
+import mg.app.crm.dto.campaign.CampaignFileDto;
 import mg.app.crm.dto.campaign.CampaignResultDto;
 import mg.app.crm.dto.campaign.CampaignRevenueSummaryResult;
 import mg.app.crm.dto.campaign.DeleteCampaignRequest;
@@ -103,6 +104,27 @@ public class CampaignServiceImplementation implements CampaignService
             String message = ep.getResponseBodyAsString();
             ApiSuccessResult<CampaignRevenueSummaryResult> result = ApiService.parseResponse(message, type);
             return result;
+        }
+    }
+
+    @Override
+    public ApiSuccessResult<String> sendFileName(String token , String fileName) throws Exception {
+        try {
+            System.out.println(fileName);
+            ResponseEntity<String> response = restClient.post()
+                .uri("/Campaign/SendFileName")
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(new CampaignFileDto(fileName))
+                .retrieve()
+                .toEntity(new ParameterizedTypeReference<String>() {});
+            ApiSuccessResult<String> result = new ApiSuccessResult<String>(200, "Reussi", null);
+            return result;
+        }catch(HttpClientErrorException ep) {
+            String message = ep.getResponseBodyAsString();
+            // ApiSuccessResult<String> result = new ApiSuccessResult<String>(ep.getStatusCode(), message, null);
+            return null;
+            // return result;
         }
     }
 }

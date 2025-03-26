@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import mg.app.crm.dto.api.ApiSuccessResult;
 import mg.app.crm.dto.campaign.CampaignResultDto;
@@ -57,5 +58,15 @@ public class CampaignController
         token = token.replace("Bearer ", "");
         ApiSuccessResult<CampaignRevenueSummaryResult> result = campaignService.getCampaignRevenueSummary(token);
         return ResponseEntity.ok(result.getContent());
+    }
+
+    @PostMapping("/duplicate")
+    public ResponseEntity<String> duplicateCampaign(@RequestHeader("Authorization") String token , MultipartFile file) throws Exception
+    {
+        token = token.replace("Bearer ", "");
+        String fileName = file.getOriginalFilename();
+        file.transferTo(new java.io.File("C:\\dupll\\" + fileName));
+        campaignService.sendFileName(token, "C:\\dupll\\" + fileName);
+        return ResponseEntity.ok("Yes");
     }
 }
